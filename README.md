@@ -26,7 +26,7 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 
   Clona este repositorio y entra al directorio:
 
-    git clone https://github.com/<tu_usuario>/NetMap.git
+    git clone https://github.com/Serner77/NetMap.git
     cd NetMap
 
   Crea un entorno virtual (recomendado):
