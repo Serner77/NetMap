@@ -1,18 +1,20 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 
 import sys
 import ipaddress
 from scapy.all import ARP, Ether, srp, conf
+from manuf import manuf 
+from tabulate import tabulate
 import subprocess
 import re
+import json
 
 def get_default_iface():
-    # usa 'ip route get' para obtener iface y source ip
     try:
         out = subprocess.check_output(["ip", "route", "get", "8.8.8.8"], text=True)
         m = re.search(r"dev (\S+).*src (\S+)", out)
         if m:
             return m.group(1), m.group(2)
-    except Exception as e:
+    except Exception:
         return None, None
     return None, None
 
@@ -38,6 +40,19 @@ def scan_network(network, iface):
     for sent, received in ans:
         devices.append({'ip': received.psrc, 'mac': received.hwsrc})
     return devices
+
+def add_vendor_info(devices):
+    p = manuf.MacParser()
+    enhanced = []
+    for d in devices:
+        vendor = p.get_manuf(d['mac']) or "Unknown"
+        enhanced.append({'ip': d['ip'], 'mac': d['mac'], 'vendor': vendor})
+    return enhanced
+
+def save_results(devices, filename="netmap_results.json"):
+    with open(filename, "w") as f:
+        json.dump(devices, f, indent=2)
+    print(f"[i] Resultados guardados en {filename}")
 
 if __name__ == "__main__":
     if not hasattr(conf, 'iface'):
@@ -67,14 +82,18 @@ if __name__ == "__main__":
     print(f"[i] Escaneando red {network} en {iface} ... (esto puede tardar unos segundos)")
     devices = scan_network(network, iface)
     if not devices:
-        print("[!] No se han encontrado dispositivos. Prueba los pasos de troubleshooting:")
-        print("   - Comprueba permisos (ejecuta con sudo).")
-        print("   - Verifica que la interfaz y la subred sean correctas.")
-        print("   - Prueba 'sudo arp-scan --interface=<iface> --localnet' o 'sudo nmap -sn -PR <red>'")
-        print("   - Revisa si la red es 'guest' o tiene aislamiento de cliente a cliente.")
+        print("[!] No se han encontrado dispositivos.")
         sys.exit(0)
 
-    print("Dispositivos encontrados:")
-    for d in devices:
-        print(f" - {d['ip']}   {d['mac']}")
+    # añadir fabricantes
+    devices = add_vendor_info(devices)
+
+    # imprimir tabla
+    table = [[i+1, d['ip'], d['mac'], d['vendor']] for i, d in enumerate(devices)]
+    print("\nDispositivos encontrados:")
+    print(tabulate(table, headers=["#", "IP", "MAC", "Vendor"], tablefmt="github"))
+    
+    # exportar resultados a JSON
+    save_results(devices)
+
 
