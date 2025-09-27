@@ -57,11 +57,11 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 
 ## 🛣️ Roadmap
 
-v0.1: Escaneo básico (IP + MAC) ✅
-v0.2: Vendor lookup + tabla formateada ✅
-v0.3: Visualización de red (grafo interactivo en HTML) 🔜
-v0.4: Dashboard web (Flask/FastAPI) 🔜
-v1.0: Exportación avanzada y alertas 🔜
+- v0.1: Escaneo básico (IP + MAC) ✅
+- v0.2: Vendor lookup + tabla formateada ✅
+- v0.3: Visualización de red (grafo interactivo en HTML) 🔜
+- v0.4: Dashboard web (Flask/FastAPI) 🔜
+- v1.0: Exportación avanzada y alertas 🔜
 
 ## 👨‍💻 Autor
 
