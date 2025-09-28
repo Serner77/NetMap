@@ -14,14 +14,15 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 - ✅Clasificación heurística de dispositivos: router, switch/AP, ordenador, móvil, impresora, TV/consola, IoT…
 - ✅ Exportación de resultados a **JSON**.  
 - ✅ Representación en **tabla clara y alineada** (CLI).
-- ✅ **Grafo interactivo en HTML** con iconos según el tipo de dispositivo.  
+- ✅ **Grafo interactivo en HTML** con iconos según el tipo de dispositivo.
+- ✅ **Dashboard web** ligero para visualizar la red.
 
 
 
-## 🚧 Próximas funcionalidades
-- 🔜 **Dashboard web** ligero para visualizar la red en tiempo real.  
+## 🚧 Próximas funcionalidades  
 - 🔜 Exportación avanzada en múltiples formatos (**PDF, CSV, Excel**).  .
-- 🔜 Detección de relaciones entre dispositivos (router principal, puntos de acceso, etc.).    
+- 🔜 Detección de relaciones entre dispositivos (router principal, puntos de acceso, etc.).
+- 🔜 Detección real de topología (SNMP, modo monitor).     
 - 🔜 **Sistema de alertas** al detectar nuevos dispositivos desconocidos.  
 
 ---
@@ -45,6 +46,9 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 ---
 
 ## ▶️ Uso
+
+**Escaneo desde CLI:**
+
   Ejecuta el script principal (necesita permisos de root):
 
     sudo venv/bin/python3 netmap.py
@@ -59,9 +63,22 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 
     python3 make_graph.py
 
+**Dashboard web (FastAPI):**
+
+Levanta el servidor en http://localhost:8000
+
+    sudo venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+Accede al dashboard en:
+
+    http://localhost:8000
+
+
 ---
 
-## 📊 Ejemplo de salida (v0.3)
+## 📊 Ejemplo de salida (v0.4)
+
+**CLI:**
 
   [i] Escaneando red 192.168.1.0/24 en eth0 ... (esto puede tardar unos segundos)
 
@@ -84,6 +101,14 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
   - ⚙️ IoT → rosa
   - ❔ Desconocido → gris
 
+**Dashboard:**
+
+Modo oscuro:
+<img width="1904" height="901" alt="image" src="https://github.com/user-attachments/assets/fdaf7eb3-4611-401e-8404-30f321a66d12" />
+
+Modo claro:
+<img width="1898" height="905" alt="image" src="https://github.com/user-attachments/assets/cc42f01b-1234-468d-a60d-25b1e12b0041" />
+
 ---
 
 ## 🛣️ Roadmap
@@ -91,7 +116,11 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 - v0.1: Escaneo básico (IP + MAC) ✅
 - v0.2: Vendor lookup + tabla formateada ✅
 - v0.3: Visualización de red (grafo interactivo en HTML) ✅
-- v0.4: Dashboard web (Flask/FastAPI) 🔜
+- v0.4: Dashboard web (FastAPI) ✅
+- v0.5: Mejoras de topología y auto-refresco 🔜  
+  - Detección de enlaces reales (router ↔ switch ↔ cliente) vía SNMP o captura pasiva.  
+  - Auto-refresco en tiempo real con WebSockets.  
+  - Notificaciones de nuevos dispositivos directamente en el dashboard. 
 - v1.0: Exportación avanzada y alertas 🔜
 
 ---
