@@ -2,51 +2,64 @@
 """
 make_graph.py
 Generador de grafo de red a partir de resultados de netmap.py (netmap_results.json).
-Produce un archivo HTML interactivo con pyvis.
+Produce un archivo HTML interactivo con pyvis utilizando iconos personalizados (SVG).
 
 Opciones CLI:
   --input FILE   Ruta al JSON de entrada (por defecto netmap_results.json)
   --output FILE  Ruta al HTML de salida (por defecto netmap_graph.html)
-  --fa5          Inyecta FontAwesome 5.15 en el HTML generado para iconos modernos
   --height PX    Altura del canvas (por defecto 900px)
 """
 
 import json
 import argparse
+import os
 import networkx as nx
 from pyvis.network import Network
-import os
 
 # ==========================
 #  Configuración de iconos
 # ==========================
-# Cada clase de dispositivo se asocia a un icono FontAwesome (código unicode),
-# tamaño y color. Esto permite representar routers, móviles, PCs, etc.
+# Mapeo clase → icono (ruta absoluta servida por FastAPI en /static/icons).
+# Cada dispositivo se representa con un icono específico y color diferenciado.
+# NOTA: Los iconos deben existir en static/icons/ (ej: router.svg, switch.svg...).
 ICON_MAP = {
-    "Router (gateway)": {"face": "FontAwesome", "code": "\uf0ac", "size": 60, "color": "blue"},   # globe
-    "Switch/AP": {"face": "FontAwesome", "code": "\uf0ec", "size": 55, "color": "orange"},        # random
-    "Ordenador": {"face": "FontAwesome", "code": "\uf108", "size": 50, "color": "cyan"},          # desktop
-    "Móvil": {"face": "FontAwesome", "code": "\uf10b", "size": 50, "color": "green"},             # mobile
-    "TV / Consola": {"face": "FontAwesome", "code": "\uf26c", "size": 50, "color": "purple"},     # tv
-    "Impresora": {"face": "FontAwesome", "code": "\uf02f", "size": 45, "color": "brown"},         # print
-    "IoT Device": {"face": "FontAwesome", "code": "\uf013", "size": 45, "color": "pink"},         # cog
-    "Desconocido": {"face": "FontAwesome", "code": "\uf128", "size": 40, "color": "gray"}         # question-circle
+    "Router (gateway)": "/static/icons/router.svg",
+    "Switch/AP":        "/static/icons/switch.svg",
+    "Ordenador":        "/static/icons/pc.svg",
+    "Móvil":            "/static/icons/mobile.svg",
+    "TV / Consola":     "/static/icons/tv.svg",
+    "Impresora":        "/static/icons/printer.svg",
+    "IoT Device":       "/static/icons/iot.svg",
+    "Desconocido":      "/static/icons/unknown.svg",
 }
+
+# Imagen de fallback si algún icono no carga correctamente
+BROKEN_IMAGE = "/static/icons/unknown.svg"
 
 
 # ==========================
 #  Funciones auxiliares
 # ==========================
 
-def load_results(filename):
-    """Carga resultados de netmap_results.json (listado de dispositivos)."""
-    with open(filename, "r") as f:
+def load_results(filename: str):
+    """
+    Carga el archivo JSON con la lista de dispositivos descubiertos por netmap.py.
+
+    :param filename: Ruta al JSON (por defecto netmap_results.json)
+    :return: Lista de diccionarios con dispositivos
+    """
+    with open(filename, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-def choose_icon(node_class):
-    """Devuelve el icono a usar para una clase de dispositivo."""
-    return ICON_MAP.get(node_class, ICON_MAP["Desconocido"])
+def icon_for(node_class: str) -> str:
+    """
+    Devuelve la ruta del icono asociado a la clase de dispositivo.
+
+    :param node_class: Clase del dispositivo (ej: "Router (gateway)", "Móvil", etc.)
+    :return: Ruta al icono (str)
+    """
+    return ICON_MAP.get(node_class or "Desconocido", ICON_MAP["Desconocido"])
 
 
 # ==========================
@@ -55,10 +68,16 @@ def choose_icon(node_class):
 
 def build_graph(devices, output_html="netmap_graph.html", height="900px"):
     """
-    Construye el grafo de dispositivos con networkx + pyvis.
-    - Cada nodo representa un dispositivo.
-    - Se dibuja un edge entre cada dispositivo y el gateway (si se detecta).
-    - El HTML generado es interactivo (zoom, arrastrar nodos, etc.)
+    Construye el grafo de la red utilizando NetworkX + PyVis.
+
+    - Cada nodo corresponde a un dispositivo detectado.
+    - Cada nodo se muestra con un icono (SVG/PNG) en función de su clase.
+    - Se conecta cada dispositivo al gateway detectado (topología en estrella).
+    - El HTML generado es interactivo: zoom, arrastre de nodos, tooltips.
+
+    :param devices: Lista de dispositivos (dicts con keys ip, mac, vendor, class)
+    :param output_html: Nombre del archivo HTML de salida
+    :param height: Altura del canvas (ej: "900px")
     """
     if not devices:
         print("[!] No hay dispositivos para graficar.")
@@ -66,80 +85,79 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
 
     G = nx.Graph()
 
-    # Detectar gateway buscando el nodo clasificado como router
+    # Detectar gateway (primer dispositivo clasificado como router)
     gateway_ip = None
     for d in devices:
-        if "router" in d.get("class", "").lower():
+        if "router" in (d.get("class") or "").lower():
             gateway_ip = d["ip"]
             break
+    if not gateway_ip and devices:
+        gateway_ip = devices[0]["ip"]  # fallback si no se detecta router
 
+    # Añadir nodos al grafo
     for d in devices:
         ip = d["ip"]
         mac = d.get("mac", "")
+        vendor = d.get("vendor", "Unknown")
         node_class = d.get("class") or "Desconocido"
-        icon = choose_icon(node_class)
 
-        # Etiqueta visible y tooltip detallado
-        label = f"{ip}\n{node_class}"
+        image_url = icon_for(node_class)
+
+        # Tooltip mostrado al pasar el ratón por encima
         title = (
             f"IP: {ip}\n"
+            f"Clase: {node_class}\n"
             f"MAC: {mac}\n"
-            f"Vendor: {d.get('vendor', 'Unknown')}\n"
-            f"Clase: {node_class}"
+            f"Vendor: {vendor}"
         )
 
-        # Añadir nodo con icono FA
-        G.add_node(ip, label=label, title=title, shape="icon", icon=icon)
+        G.add_node(
+            ip,
+            label="",                 # dejamos solo icono (sin texto redundante)
+            title=title,              # tooltip con saltos de línea \n
+            shape="image",            # representación con imagen
+            image=image_url,          # ruta al icono
+            size = 40,
+            brokenImage=BROKEN_IMAGE, # fallback si falla el icono
+            borderWidth=0
+        )
 
-        # Conectar cada nodo al gateway (topología estrella)
+    # Conectar cada dispositivo al gateway (topología en estrella simple)
+    for d in devices:
+        ip = d["ip"]
         if gateway_ip and ip != gateway_ip:
             G.add_edge(gateway_ip, ip)
 
-    # Crear visualización pyvis
-    net = Network(height=height, width="100%", bgcolor="#222222", font_color="white")
+    # Crear visualización con PyVis
+    net = Network(height=height, width="100%", bgcolor="#111111", font_color="white")
     net.from_nx(G)
 
-    # Física para evitar solapamiento
-    net.repulsion(node_distance=300, central_gravity=0.2, spring_length=200)
-    net.toggle_physics(True)
+    # Configurar física para que los nodos no se solapen
+    net.repulsion(
+        node_distance=320,
+        central_gravity=0.18,
+        spring_length=210,
+        spring_strength=0.02
+    )
 
-    # Guardar HTML
+    # Exportar HTML
     net.write_html(output_html, open_browser=False)
     print(f"[i] Grafo generado en {output_html}")
 
 
-def inject_fa5(html_file):
-    """
-    Inyecta FontAwesome 5.15 en el HTML generado por pyvis.
-    Útil porque pyvis trae FA4 por defecto (limitado).
-    """
-    try:
-        with open(html_file, "r", encoding="utf-8") as f:
-            html = f.read()
-        old = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
-        new = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'
-        if old in html:
-            html = html.replace(old, new)
-        elif "</head>" in html:
-            insert_css = f'<link rel="stylesheet" href="{new}">\n'
-            html = html.replace("</head>", insert_css + "</head>")
-        with open(html_file, "w", encoding="utf-8") as f:
-            f.write(html)
-        print("[i] Inyectado FontAwesome 5.15 en el HTML.")
-    except Exception as e:
-        print(f"[!] No se pudo inyectar FA5: {e}")
-
-
 # ==========================
-#  Main
+#  Main (CLI)
 # ==========================
 
 def main():
+    """
+    CLI del generador de grafo.
+    Permite invocar desde terminal con parámetros.
+    """
     p = argparse.ArgumentParser(description="Generador de grafo desde netmap_results.json")
-    p.add_argument("--input", "-i", default="netmap_results.json")
-    p.add_argument("--output", "-o", default="netmap_graph.html")
-    p.add_argument("--fa5", action="store_true", help="Inyecta FontAwesome 5.15 en el HTML resultante")
-    p.add_argument("--height", default="900px", help="Alto del canvas HTML")
+    p.add_argument("--input", "-i", default="netmap_results.json", help="Archivo JSON con resultados de netmap")
+    p.add_argument("--output", "-o", default="netmap_graph.html", help="Archivo HTML de salida")
+    p.add_argument("--height", default="900px", help="Alto del canvas HTML (ej: 600px, 100%)")
     args = p.parse_args()
 
     if not os.path.exists(args.input):
@@ -149,11 +167,6 @@ def main():
     devices = load_results(args.input)
     build_graph(devices, output_html=args.output, height=args.height)
 
-    if args.fa5:
-        inject_fa5(args.output)
-        print("[i] Usa códigos FA5 en ICON_MAP si quieres iconos modernos.")
-
 
 if __name__ == "__main__":
     main()
-

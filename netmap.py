@@ -259,8 +259,6 @@ def refine_classification(vendor, ip, gateway_ip, mac, ttl, open_ports, ssdp_res
             return "Ordenador"
 
     # 7) Fallback
-    if vendor and vendor != "Unknown":
-        return vendor
     return "Desconocido"
 
 
