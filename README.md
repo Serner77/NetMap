@@ -20,10 +20,9 @@ El proyecto está diseñado para estudiantes, administradores de sistemas y entu
 
 
 ## 🚧 Próximas funcionalidades  
-- 🔜 Exportación avanzada en múltiples formatos (**PDF, CSV, Excel**).  .
+- 🔜 Exportación avanzada en múltiples formatos (**PDF, CSV...**).  .
 - 🔜 Detección de relaciones entre dispositivos (router principal, puntos de acceso, etc.).
 - 🔜 Detección real de topología (SNMP, modo monitor).     
-- 🔜 **Sistema de alertas** al detectar nuevos dispositivos desconocidos.  
 
 ---
 
@@ -80,6 +79,7 @@ Accede al dashboard en:
 
 **CLI:**
 
+  [i] Interfaz usada: eth0 (IP origen: 192.168.1.22, Gateway: 192.168.1.1)
   [i] Escaneando red 192.168.1.0/24 en eth0 ... (esto puede tardar unos segundos)
 
   Dispositivos encontrados (resumen):
@@ -117,11 +117,11 @@ Modo claro:
 - v0.2: Vendor lookup + tabla formateada ✅
 - v0.3: Visualización de red (grafo interactivo en HTML) ✅
 - v0.4: Dashboard web (FastAPI) ✅
-- v0.5: Mejoras de topología y auto-refresco 🔜  
+- v0.5: Exportación avanzada 🔜
+- v1.0: Mejoras de topología y auto-refresco 🔜  
   - Detección de enlaces reales (router ↔ switch ↔ cliente) vía SNMP o captura pasiva.  
   - Auto-refresco en tiempo real con WebSockets.  
   - Notificaciones de nuevos dispositivos directamente en el dashboard. 
-- v1.0: Exportación avanzada y alertas 🔜
 
 ---
 
