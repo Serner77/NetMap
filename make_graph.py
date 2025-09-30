@@ -69,10 +69,14 @@ BROKEN_IMAGE = "/static/icons/unknown.svg"
 
 def load_results(filename: str):
     """
-    Carga el archivo JSON con la lista de dispositivos descubiertos por netmap.py.
+    Carga el archivo JSON con los resultados de netmap.py.
+    Si contiene metadatos, devuelve solo la lista de dispositivos.
     """
     with open(filename, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+    if isinstance(data, dict) and "devices" in data:
+        return data["devices"]
+    return data
 
 
 def icon_for(node_class: str) -> str:
@@ -139,7 +143,7 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
             G.add_edge(gateway_ip, ip)
 
     # PyVis
-    net = Network(height=height, width="100%", bgcolor="#111111", font_color="white")
+    net = Network(height=height, width="100%", bgcolor="#111111", font_color="white", cdn_resources="remote")
     net.from_nx(G)
 
     net.repulsion(

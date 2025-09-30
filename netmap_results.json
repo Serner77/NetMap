@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "deep": true,
+    "ts": 1759227495.8542287
+  },
+  "devices": [
+    {
+      "ip": "192.168.1.1",
+      "mac": "58:d3:12:70:30:bc",
+      "vendor": "zte corporation",
+      "ttl": 64,
+      "open_ports": [
+        80,
+        443
+      ],
+      "ssdp": [
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: upnp:rootdevice\r\nUSN: uuid:20809696-105a-3721-e8b8-58d3127030bc::upnp:rootdevice\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: uuid:20809696-105a-3721-e8b8-58d3127030bc\r\nUSN: uuid:20809696-105a-3721-e8b8-58d3127030bc\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-upnp-org:device:InternetGatewayDevice:1\r\nUSN: uuid:20809696-105a-3721-e8b8-58d3127030bc::urn:schemas-upnp-org:device:InternetGatewayDevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-microsoft-com:service:OSInfo:1\r\nUSN: uuid:20809696-105a-3721-e8b8-58d3127030bc::urn:schemas-microsoft-com:service:OSInfo:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: uuid:20809696-205a-3721-e8b8-58d3127030bc\r\nUSN: uuid:20809696-205a-3721-e8b8-58d3127030bc\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-upnp-org:device:WANDevice:1\r\nUSN: uuid:20809696-205a-3721-e8b8-58d3127030bc::urn:schemas-upnp-org:device:WANDevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1\r\nUSN: uuid:20809696-205a-3721-e8b8-58d3127030bc::urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: uuid:20809696-305a-3721-e8b8-58d3127030bc\r\nUSN: uuid:20809696-305a-3721-e8b8-58d3127030bc\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-upnp-org:device:WANConnectionDevice:1\r\nUSN: uuid:20809696-305a-3721-e8b8-58d3127030bc::urn:schemas-upnp-org:device:WANConnectionDevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-upnp-org:service:WANIPConnection:1\r\nUSN: uuid:20809696-305a-3721-e8b8-58d3127030bc::urn:schemas-upnp-org:service:WANIPConnection:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1800\r\nDATE: Tue, 30 Sep 2025 10:18:06 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.1:52869/gatedesc.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 270cb47e-1dd2-11b2-8f71-f66bfc98d660\r\nSERVER: Linux/5.4.196, UPnP/1.0, Portable SDK for UPnP devices/1.14.18\r\nX-User-Agent: redsonic\r\nST: urn:schemas-upnp-org:service:WANIPv6FirewallControl:1\r\nUSN: uuid:20809696-305a-3721-e8b8-58d3127030bc::urn:schemas-upnp-org:service:WANIPv6FirewallControl:1\r\n\r\n"
+      ],
+      "class": "Router (gateway)"
+    },
+    {
+      "ip": "192.168.1.10",
+      "mac": "0c:b8:15:75:d0:0b",
+      "vendor": "Espressif Inc.",
+      "ttl": 255,
+      "open_ports": [],
+      "ssdp": [],
+      "class": "IoT Device"
+    },
+    {
+      "ip": "192.168.1.12",
+      "mac": "00:45:e2:bb:14:3f",
+      "vendor": "CyberTAN Technology Inc.",
+      "ttl": 128,
+      "open_ports": [],
+      "ssdp": [],
+      "class": "Ordenador"
+    },
+    {
+      "ip": "192.168.1.15",
+      "mac": "54:ec:b0:0b:48:80",
+      "vendor": "Sercomm France Sarl",
+      "ttl": 64,
+      "open_ports": [
+        80,
+        443
+      ],
+      "ssdp": [
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: upnp:rootdevice\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::upnp:rootdevice\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: upnp:rootdevice\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::upnp:rootdevice\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: upnp:rootdevice\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::upnp:rootdevice\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: upnp:rootdevice\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::upnp:rootdevice\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:device:WFADevice:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:device:WFADevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:device:WFADevice:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:device:WFADevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:13 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:device:WFADevice:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:device:WFADevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:14 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:14 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:device:WFADevice:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:device:WFADevice:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:14 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1801\r\nDATE: Tue, 30 Sep 2025 10:18:14 GMT\r\nEXT:\r\nLOCATION: http://192.168.1.15:49152/wps_device.xml\r\nSERVER: Unspecified, UPnP/1.0, Unspecified\r\nST: urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\nUSN: uuid:4887f3d4-608d-1dcf-93d0-81ac73c0857e::urn:schemas-wifialliance-org:service:WFAWLANConfig:1\r\n\r\n"
+      ],
+      "class": "Switch/AP"
+    }
+  ]
+}

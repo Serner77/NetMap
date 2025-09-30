@@ -128,10 +128,22 @@ async def api_scan_status(job_id: str):
 async def api_devices():
     """Devuelve el contenido de netmap_results.json (último escaneo)."""
     if not os.path.exists("netmap_results.json"):
-        return {"devices": []}
+        return {"devices": [], "deep": False}
+
     with open("netmap_results.json", "r") as f:
-        devices = json.load(f)
-    return {"devices": devices}
+        data = json.load(f)
+
+    devices = data.get("devices", [])
+    deep = data.get("_meta", {}).get("deep", False)
+
+    if not deep:
+        # Solo devolver IP, MAC y Vendor
+        devices = [
+            {"ip": d.get("ip"), "mac": d.get("mac"), "vendor": d.get("vendor")}
+            for d in devices
+        ]
+
+    return {"devices": devices, "deep": deep}
 
 
 @app.get("/api/graph")
