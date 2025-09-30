@@ -18,6 +18,7 @@ import re
 import json
 import socket
 import time
+import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from argparse import ArgumentParser
 
@@ -30,6 +31,39 @@ try:
     MACLOOKUP_AVAILABLE = True
 except Exception:
     MACLOOKUP_AVAILABLE = False
+
+
+# ==============================
+#  Logging con colores
+# ==============================
+
+class ColorFormatter(logging.Formatter):
+    COLORS = {
+        logging.DEBUG: "\033[37m",    # gris
+        logging.INFO: "\033[36m",     # cian
+        logging.WARNING: "\033[33m",  # amarillo/naranja
+        logging.ERROR: "\033[31m",    # rojo
+        logging.CRITICAL: "\033[41m", # fondo rojo
+    }
+    RESET = "\033[0m"
+
+    def format(self, record):
+        base = super().format(record)
+        # separa "LEVEL: mensaje"
+        if ": " in base:
+            level, msg = base.split(": ", 1)
+            color = self.COLORS.get(record.levelno, "")
+            return f"{color}{level}{self.RESET}: {msg}"
+        return base
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s"
+)
+for handler in logging.getLogger().handlers:
+    handler.setFormatter(ColorFormatter("%(levelname)s: %(message)s"))
+
+logger = logging.getLogger("netmap")
 
 
 # ==============================
@@ -91,7 +125,7 @@ def scan_network(network, iface, timeout=3, retry=1):
     try:
         ans = srp(packet, timeout=timeout, retry=retry)[0]
     except Exception as e:
-        print(f"[!] Error ARP (Scapy): {e}")
+        logger.error(f"Error ARP (Scapy): {e}")
         return []
     devices = []
     for _, rcv in ans:
@@ -322,6 +356,7 @@ def deep_scan_devices(devices, gateway_ip, workers=12):
     """
     Ejecuta probe_device en paralelo sobre todos los hosts encontrados.
     """
+    workers = max(1, int(workers))
     results = []
     with ThreadPoolExecutor(max_workers=workers) as ex:
         future_to_ip = {ex.submit(probe_device, d, gateway_ip): d['ip'] for d in devices}
@@ -331,7 +366,7 @@ def deep_scan_devices(devices, gateway_ip, workers=12):
                 results.append(res)
             except Exception as e:
                 ip = future_to_ip[fu]
-                print(f"[!] Error probando {ip}: {e}")
+                logger.warning(f"Error probando {ip}: {e}")
     results.sort(key=lambda x: tuple(int(p) for p in x['ip'].split('.')))
     return results
 
@@ -340,7 +375,7 @@ def save_results(devices, filename="netmap_results.json"):
     """Guarda resultados en JSON con indentación bonita."""
     with open(filename, "w") as f:
         json.dump(devices, f, indent=2)
-    print(f"[i] Resultados guardados en {filename}")
+    logger.info(f"Resultados guardados en {filename}")
 
 
 # ==============================
@@ -357,6 +392,16 @@ def main():
     if not hasattr(conf, 'iface'):
         conf.iface = None
 
+    # Validación de workers
+    if args.deep:
+        if args.workers < 1:
+            logger.error("--workers debe ser un entero >= 1 cuando se usa --deep")
+            sys.exit(1)
+    else:
+        if args.workers != 12:
+            logger.warning("--workers se ignora si no usas --deep")
+        args.workers = None
+
     iface = args.iface
     src_ip = None
     gateway_ip = None
@@ -364,12 +409,12 @@ def main():
     if not iface:
         iface, src_ip, gateway_ip = get_default_iface()
     if not iface:
-        print("[!] No se pudo detectar la interfaz por defecto. Usa --iface o ejecuta: ip route get 8.8.8.8")
+        logger.error("No se pudo detectar la interfaz por defecto. Usa --iface o ejecuta: ip route get 8.8.8.8")
         sys.exit(1)
-    print(f"[i] Interfaz usada: {iface} (IP origen: {src_ip}, Gateway: {gateway_ip})")
+    logger.info(f"Interfaz usada: {iface} (IP origen: {src_ip}, Gateway: {gateway_ip})")
 
     if not iface_has_ip(iface):
-        print(f"[!] La interfaz {iface} no tiene IP asignada. Revisa la conexión.")
+        logger.error(f"La interfaz {iface} no tiene IP asignada. Revisa la conexión.")
         sys.exit(1)
 
     # calcular subred
@@ -377,24 +422,24 @@ def main():
         out = subprocess.check_output(["ip", "-4", "addr", "show", "dev", iface], text=True)
         m = re.search(r"inet (\d+\.\d+\.\d+\.\d+)/(\d+)", out)
         if not m:
-            print("[!] No pude leer la máscara de la interfaz.")
+            logger.error("No pude leer la máscara de la interfaz.")
             sys.exit(1)
         ip_str, prefix = m.group(1), int(m.group(2))
         network = ipaddress.ip_network(f"{ip_str}/{prefix}", strict=False)
     except Exception as e:
-        print(f"[!] Error calculando subred: {e}")
+        logger.error(f"Error calculando subred: {e}")
         sys.exit(1)
 
-    print(f"[i] Escaneando red {network} en {iface} ... (esto puede tardar unos segundos)")
+    logger.info(f"Escaneando red {network} en {iface} ... (esto puede tardar unos segundos)")
     devices = scan_network(network, iface)
     if not devices:
-        print("[!] No se han encontrado dispositivos.")
+        logger.warning("No se han encontrado dispositivos.")
         sys.exit(0)
 
     devices_basic = add_vendor_info_basic(devices)
 
     if args.deep:
-        print(f"[i] Modo deep: probeando {len(devices_basic)} hosts con {args.workers} hilos...")
+        logger.info(f"Modo deep: probeando {len(devices_basic)} hosts con {args.workers} hilos...")
         devices_out = deep_scan_devices(devices_basic, gateway_ip=gateway_ip, workers=args.workers)
     else:
         devices_out = []
@@ -422,4 +467,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
