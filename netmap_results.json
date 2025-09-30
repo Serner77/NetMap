@@ -1,0 +1,56 @@
+[
+  {
+    "ip": "192.168.1.12",
+    "mac": "00:45:e2:bb:14:3f",
+    "vendor": "CyberTAN Technology Inc.",
+    "ttl": null,
+    "open_ports": [],
+    "ssdp": [],
+    "class": "CyberTAN Technology Inc."
+  },
+  {
+    "ip": "192.168.1.1",
+    "mac": "58:d3:12:70:30:bc",
+    "vendor": "zte corporation",
+    "ttl": null,
+    "open_ports": [],
+    "ssdp": [],
+    "class": "zte corporation"
+  },
+  {
+    "ip": "192.168.1.10",
+    "mac": "0c:b8:15:75:d0:0b",
+    "vendor": "Espressif Inc.",
+    "ttl": null,
+    "open_ports": [],
+    "ssdp": [],
+    "class": "Espressif Inc."
+  },
+  {
+    "ip": "192.168.1.15",
+    "mac": "54:ec:b0:0b:48:80",
+    "vendor": "Sercomm France Sarl",
+    "ttl": null,
+    "open_ports": [],
+    "ssdp": [],
+    "class": "Sercomm France Sarl"
+  },
+  {
+    "ip": "192.168.1.13",
+    "mac": "9e:f4:6d:a6:f8:85",
+    "vendor": "MAC Aleatoria (posible m\u00f3vil)",
+    "ttl": null,
+    "open_ports": [],
+    "ssdp": [],
+    "class": "MAC Aleatoria (posible m\u00f3vil)"
+  },
+  {
+    "ip": "192.168.1.14",
+    "mac": "e6:bd:4f:b1:e8:9a",
+    "vendor": "MAC Aleatoria (posible m\u00f3vil)",
+    "ttl": null,
+    "open_ports": [],
+    "ssdp": [],
+    "class": "MAC Aleatoria (posible m\u00f3vil)"
+  }
+]

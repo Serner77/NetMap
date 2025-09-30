@@ -14,14 +14,42 @@ import json
 import argparse
 import os
 import networkx as nx
+import logging
 from pyvis.network import Network
+
+# ==========================
+#  Logging con colores
+# ==========================
+
+class ColorFormatter(logging.Formatter):
+    COLORS = {
+        logging.INFO: "\033[36m",    # cian 
+        logging.WARNING: "\033[33m", # naranja
+        logging.ERROR: "\033[31m",   # rojo
+        logging.CRITICAL: "\033[41m" # fondo rojo
+    }
+    RESET = "\033[0m"
+
+    def format(self, record):
+        base = super().format(record)
+        if ": " in base:
+            level, msg = base.split(": ", 1)
+            color = self.COLORS.get(record.levelno, "")
+            return f"{color}{level}{self.RESET}: {msg}"
+        return base
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s"
+)
+for handler in logging.getLogger().handlers:
+    handler.setFormatter(ColorFormatter("%(levelname)s: %(message)s"))
+
+logger = logging.getLogger("make_graph")
 
 # ==========================
 #  Configuración de iconos
 # ==========================
-# Mapeo clase → icono (ruta absoluta servida por FastAPI en /static/icons).
-# Cada dispositivo se representa con un icono específico y color diferenciado.
-# NOTA: Los iconos deben existir en static/icons/ (ej: router.svg, switch.svg...).
 ICON_MAP = {
     "Router (gateway)": "/static/icons/router.svg",
     "Switch/AP":        "/static/icons/switch.svg",
@@ -33,9 +61,7 @@ ICON_MAP = {
     "Desconocido":      "/static/icons/unknown.svg",
 }
 
-# Imagen de fallback si algún icono no carga correctamente
 BROKEN_IMAGE = "/static/icons/unknown.svg"
-
 
 # ==========================
 #  Funciones auxiliares
@@ -44,9 +70,6 @@ BROKEN_IMAGE = "/static/icons/unknown.svg"
 def load_results(filename: str):
     """
     Carga el archivo JSON con la lista de dispositivos descubiertos por netmap.py.
-
-    :param filename: Ruta al JSON (por defecto netmap_results.json)
-    :return: Lista de diccionarios con dispositivos
     """
     with open(filename, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -55,9 +78,6 @@ def load_results(filename: str):
 def icon_for(node_class: str) -> str:
     """
     Devuelve la ruta del icono asociado a la clase de dispositivo.
-
-    :param node_class: Clase del dispositivo (ej: "Router (gateway)", "Móvil", etc.)
-    :return: Ruta al icono (str)
     """
     return ICON_MAP.get(node_class or "Desconocido", ICON_MAP["Desconocido"])
 
@@ -69,18 +89,9 @@ def icon_for(node_class: str) -> str:
 def build_graph(devices, output_html="netmap_graph.html", height="900px"):
     """
     Construye el grafo de la red utilizando NetworkX + PyVis.
-
-    - Cada nodo corresponde a un dispositivo detectado.
-    - Cada nodo se muestra con un icono (SVG/PNG) en función de su clase.
-    - Se conecta cada dispositivo al gateway detectado (topología en estrella).
-    - El HTML generado es interactivo: zoom, arrastre de nodos, tooltips.
-
-    :param devices: Lista de dispositivos (dicts con keys ip, mac, vendor, class)
-    :param output_html: Nombre del archivo HTML de salida
-    :param height: Altura del canvas (ej: "900px")
     """
     if not devices:
-        print("[!] No hay dispositivos para graficar.")
+        logger.error("No hay dispositivos para graficar.")
         return
 
     G = nx.Graph()
@@ -92,9 +103,9 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
             gateway_ip = d["ip"]
             break
     if not gateway_ip and devices:
-        gateway_ip = devices[0]["ip"]  # fallback si no se detecta router
+        gateway_ip = devices[0]["ip"]
 
-    # Añadir nodos al grafo
+    # Añadir nodos
     for d in devices:
         ip = d["ip"]
         mac = d.get("mac", "")
@@ -103,7 +114,6 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
 
         image_url = icon_for(node_class)
 
-        # Tooltip mostrado al pasar el ratón por encima
         title = (
             f"IP: {ip}\n"
             f"Clase: {node_class}\n"
@@ -113,26 +123,25 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
 
         G.add_node(
             ip,
-            label="",                 # dejamos solo icono (sin texto redundante)
-            title=title,              # tooltip con saltos de línea \n
-            shape="image",            # representación con imagen
-            image=image_url,          # ruta al icono
-            size = 40,
-            brokenImage=BROKEN_IMAGE, # fallback si falla el icono
+            label="",
+            title=title,
+            shape="image",
+            image=image_url,
+            size=40,
+            brokenImage=BROKEN_IMAGE,
             borderWidth=0
         )
 
-    # Conectar cada dispositivo al gateway (topología en estrella simple)
+    # Conectar con gateway
     for d in devices:
         ip = d["ip"]
         if gateway_ip and ip != gateway_ip:
             G.add_edge(gateway_ip, ip)
 
-    # Crear visualización con PyVis
+    # PyVis
     net = Network(height=height, width="100%", bgcolor="#111111", font_color="white")
     net.from_nx(G)
 
-    # Configurar física para que los nodos no se solapen
     net.repulsion(
         node_distance=320,
         central_gravity=0.18,
@@ -140,9 +149,8 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
         spring_strength=0.02
     )
 
-    # Exportar HTML
     net.write_html(output_html, open_browser=False)
-    print(f"[i] Grafo generado en {output_html}")
+    logger.info(f"Grafo generado en {output_html}")
 
 
 # ==========================
@@ -150,10 +158,6 @@ def build_graph(devices, output_html="netmap_graph.html", height="900px"):
 # ==========================
 
 def main():
-    """
-    CLI del generador de grafo.
-    Permite invocar desde terminal con parámetros.
-    """
     p = argparse.ArgumentParser(description="Generador de grafo desde netmap_results.json")
     p.add_argument("--input", "-i", default="netmap_results.json", help="Archivo JSON con resultados de netmap")
     p.add_argument("--output", "-o", default="netmap_graph.html", help="Archivo HTML de salida")
@@ -161,7 +165,7 @@ def main():
     args = p.parse_args()
 
     if not os.path.exists(args.input):
-        print(f"[!] Archivo {args.input} no encontrado. Ejecuta netmap.py primero.")
+        logger.error(f"Archivo {args.input} no encontrado. Ejecuta netmap.py primero.")
         return
 
     devices = load_results(args.input)
