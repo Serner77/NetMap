@@ -75,14 +75,36 @@ Accede al dashboard en:
 
 ---
 
-## 📊 Ejemplo de salida (v0.4)
+## 📊 Ejemplo de salida (v0.42)
 
-**CLI:**
-
-  [i] Interfaz usada: eth0 (IP origen: 192.168.1.22, Gateway: 192.168.1.1)
-  [i] Escaneando red 192.168.1.0/24 en eth0 ... (esto puede tardar unos segundos)
+  **CLI: Modo Simple**
+  
+  INFO: Interfaz usada: eth0 (IP origen: 192.168.1.22, Gateway: 192.168.1.1)
+  
+  INFO: Escaneando red 192.168.1.0/24 en eth0 ... (esto puede tardar unos segundos)
+  
+  INFO: Resultados guardados en netmap_results.json
 
   Dispositivos encontrados (resumen):
+
+  |   # | IP          | MAC               | Vendor          |
+  |-----|-------------|-------------------|-----------------|
+  |   1 | 192.168.1.1 | 58:d3:12:70:30:bc | ZTE Corporation |
+  |   2 | 192.168.1.10| 0c:b8:15:75:d0:0b | Espressif       |
+  |   3 | 192.168.1.21| 00:45:e2:bb:14:3f | CyberTAN        |
+
+  **CLI: Modo Deep**
+  
+  INFO: Interfaz usada: eth0 (IP origen: 192.168.1.22, Gateway: 192.168.1.1)
+  
+  INFO: Escaneando red 192.168.1.0/24 en eth0 ... (esto puede tardar unos segundos)
+  
+  INFO: Modo deep: probeando 3 hosts con 12 hilos...
+  
+  INFO: Resultados guardados en netmap_results.json
+  
+  Dispositivos encontrados (resumen):
+  
   |   # | IP          | MAC               | Vendor          |   TTL | Open ports   | Clase            |
   |-----|-------------|-------------------|-----------------|-------|--------------|------------------|
   |   1 | 192.168.1.1 | 58:d3:12:70:30:bc | ZTE Corporation |    64 | [80, 443]    | Router (gateway) |
@@ -117,8 +139,8 @@ Modo claro:
 - v0.2: Vendor lookup + tabla formateada ✅
 - v0.3: Visualización de red (grafo interactivo en HTML) ✅
 - v0.4: Dashboard web (FastAPI) ✅
-- v0.5: Exportación avanzada 🔜
-- v1.0: Mejoras de topología y auto-refresco 🔜  
+- v1.0: Exportación avanzada y versión estable 🔜
+- v1.*: Mejoras de topología y auto-refresco 🔜  
   - Detección de enlaces reales (router ↔ switch ↔ cliente) vía SNMP o captura pasiva.  
   - Auto-refresco en tiempo real con WebSockets.  
   - Notificaciones de nuevos dispositivos directamente en el dashboard. 
