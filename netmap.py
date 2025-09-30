@@ -103,6 +103,44 @@ def get_default_iface():
     return None, None, None
 
 
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#  NUEVO: Info de interfaz cuando se fuerza --iface
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def get_iface_info(iface: str):
+    """
+    Obtiene la IP asignada a la interfaz indicada y el gateway por defecto.
+    - Intenta extraer la IP de la interfaz concreta.
+    - Intenta extraer el gateway por defecto; si hay múltiples, usa el que
+      esté asociado a la interfaz cuando sea posible.
+    """
+    ip_addr = None
+    gateway_ip = None
+
+    try:
+        # Obtener IP v4 de la interfaz indicada
+        out = subprocess.check_output(["ip", "-4", "addr", "show", "dev", iface], text=True)
+        m = re.search(r"inet (\d+\.\d+\.\d+\.\d+)", out)
+        if m:
+            ip_addr = m.group(1)
+    except Exception:
+        pass
+
+    try:
+        # Preferir ruta por defecto asociada a esa interfaz, si existe
+        out = subprocess.check_output(["ip", "route", "show", "default", "dev", iface], text=True)
+        m = re.search(r"default via (\d+\.\d+\.\d+\.\d+)", out)
+        if not m:
+            # Fallback: ruta por defecto global
+            out = subprocess.check_output(["ip", "route", "show", "default"], text=True)
+            m = re.search(r"default via (\d+\.\d+\.\d+\.\d+)", out)
+        if m:
+            gateway_ip = m.group(1)
+    except Exception:
+        pass
+
+    return ip_addr, gateway_ip
+
+
 def iface_has_ip(iface):
     """Comprueba si una interfaz tiene IP v4 asignada."""
     try:
@@ -371,10 +409,14 @@ def deep_scan_devices(devices, gateway_ip, workers=12):
     return results
 
 
-def save_results(devices, filename="netmap_results.json"):
-    """Guarda resultados en JSON con indentación bonita."""
+def save_results(devices, filename="netmap_results.json", deep=False):
+    """Guarda resultados en JSON con metadata."""
+    payload = {
+        "_meta": {"deep": deep, "ts": time.time()},
+        "devices": devices
+    }
     with open(filename, "w") as f:
-        json.dump(devices, f, indent=2)
+        json.dump(payload, f, indent=2)
     logger.info(f"Resultados guardados en {filename}")
 
 
@@ -408,6 +450,10 @@ def main():
 
     if not iface:
         iface, src_ip, gateway_ip = get_default_iface()
+    else:
+        # Cuando se fuerza --iface, obtener también la IP origen y el gateway
+        src_ip, gateway_ip = get_iface_info(iface)
+
     if not iface:
         logger.error("No se pudo detectar la interfaz por defecto. Usa --iface o ejecuta: ip route get 8.8.8.8")
         sys.exit(1)
@@ -453,16 +499,36 @@ def main():
                 'ssdp': [],
                 'class': d['vendor']
             })
+            
+    if gateway_ip:
+        for d in devices_out:
+            if d['ip'] == gateway_ip:
+                d['class'] = "Router (gateway)"
 
-    save_results(devices_out)
+    save_results(devices_out, deep=args.deep)
 
     # imprimir tabla resumen
     table = []
-    for i, d in enumerate(devices_out):
-        cls = d.get('class') or d.get('vendor') or "Unknown"
-        table.append([i+1, d['ip'], d['mac'], d.get('vendor'), d.get('ttl'), d.get('open_ports'), cls])
-    print("\nDispositivos encontrados (resumen):")
-    print(tabulate(table, headers=["#", "IP", "MAC", "Vendor", "TTL", "Open ports", "Clase"], tablefmt="github"))
+    if args.deep:
+        headers = ["#", "IP", "MAC", "Vendor", "TTL", "Open ports", "Clase"]
+        for i, d in enumerate(devices_out):
+            cls = d.get('class') or d.get('vendor') or "Unknown"
+            table.append([
+                i+1,
+                d['ip'],
+                d['mac'],
+                d.get('vendor'),
+                d.get('ttl'),
+                d.get('open_ports'),
+                cls
+            ])
+    else:
+        headers = ["#", "IP", "MAC", "Vendor"]
+        for i, d in enumerate(devices_out):
+            table.append([i+1, d['ip'], d['mac'], d.get('vendor')])
+
+    print("\nDispositivos encontrados (resumen):\n")
+    print(tabulate(table, headers=headers, tablefmt="github"))
 
 
 if __name__ == "__main__":
