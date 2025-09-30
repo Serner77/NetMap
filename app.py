@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 app.py
-FastAPI backend para NetMap con dashboard + gestión de jobs cancelables.
+FastAPI backend para NetMap con dashboard.
 """
 
 import os

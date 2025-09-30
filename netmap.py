@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-netmap.py v0.3
+netmap.py v0.41
 Escaneo de red basado en ARP + heurísticas para clasificar dispositivos.
 Permite un modo simple (--deep off) o un modo profundo (--deep) con:
 - Ping TTL
