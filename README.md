@@ -3,26 +3,7 @@
 
 NetMap es una herramienta de análisis de red desarrollada en **Python** que permite descubrir todos los dispositivos conectados a tu red local y representarlos de manera visual e intuitiva.  
 
-El proyecto está diseñado para estudiantes, administradores de sistemas y entusiastas de la seguridad que deseen comprender mejor qué ocurre en su red doméstica o de trabajo.  
-
----
-
-## ✨ Características implementadas
-- ✅ Escaneo de red mediante ARP para detectar dispositivos.  
-- ✅ Identificación de direcciones **IP** y **MAC**.  
-- ✅ Identificación de fabricantes (**OUI lookup**).
-- ✅Clasificación heurística de dispositivos: router, switch/AP, ordenador, móvil, impresora, TV/consola, IoT…
-- ✅ Exportación de resultados a **JSON**.  
-- ✅ Representación en **tabla clara y alineada** (CLI).
-- ✅ **Grafo interactivo en HTML** con iconos según el tipo de dispositivo.
-- ✅ **Dashboard web** ligero para visualizar la red.
-
-
-
-## 🚧 Próximas funcionalidades  
-- 🔜 Exportación avanzada en múltiples formatos (**PDF, CSV...**).  .
-- 🔜 Detección de relaciones entre dispositivos (router principal, puntos de acceso, etc.).
-- 🔜 Detección real de topología (SNMP, modo monitor).     
+El proyecto está diseñado para estudiantes, administradores de sistemas y entusiastas de la seguridad que deseen comprender mejor qué ocurre en su red doméstica o de trabajo.      
 
 ---
 
@@ -139,7 +120,7 @@ Modo claro:
 - v0.2: Vendor lookup + tabla formateada ✅
 - v0.3: Visualización de red (grafo interactivo en HTML) ✅
 - v0.4: Dashboard web (FastAPI) ✅
-- v1.0: Exportación avanzada y versión estable 🔜
+- v1.0: Exportación avanzada y versión estable y sin errores 🔜
 - v1.*: Mejoras de topología y auto-refresco 🔜  
   - Detección de enlaces reales (router ↔ switch ↔ cliente) vía SNMP o captura pasiva.  
   - Auto-refresco en tiempo real con WebSockets.  
